@@ -54,7 +54,8 @@ One click. Bookmarked. Organised. Searchable.
 
 ## Project Structure
 
-absense/
+```
+tabsense/
 ├── src/
 │   ├── manifest.json        # Extension config and permissions
 │   ├── background/
@@ -72,3 +73,48 @@ absense/
 ├── NOTES.md                 # Learning journal
 ├── CHANGELOG.md             # Version history
 └── README.md                # You are here
+```
+---
+
+## Roadmap
+
+- [x] v0.1 — Core time tracking and bookmark prompt
+- [ ] v0.2 — Firefox support
+- [ ] v0.3 — Smart folder organisation
+- [ ] v0.4 — Search across saved bookmarks
+- [ ] v0.5 — Safari + iOS support
+- [ ] v1.0 — Chrome Web Store launch
+
+---
+
+## Built With
+
+- Vanilla JavaScript (no frameworks — intentional)
+- Chrome Extensions Manifest V3
+- Chrome APIs — tabs, bookmarks, storage, notifications
+
+---
+
+## Contributing
+
+This is an open source project — contributions are welcome!
+
+1. Fork the repo
+2. Create a branch (`git checkout -b feature/your-idea`)
+3. Commit your changes
+4. Open a Pull Request
+
+---
+
+## Author
+
+**Harish Sundaram**
+Built in public — follow the journey on
+[LinkedIn](https://linkedin.com/in/harishsundaramuk)
+and [GitHub](https://github.com/harishsundaramuk)
+
+---
+
+## License
+
+MIT — free to use, modify and distribute.
