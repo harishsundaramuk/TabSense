@@ -79,10 +79,13 @@ tabsense/
 ## Roadmap
 
 - [x] v0.1 — Core time tracking and bookmark prompt
-- [ ] v0.2 — Firefox support
-- [ ] v0.3 — Smart folder organisation
-- [ ] v0.4 — Search across saved bookmarks
-- [ ] v0.5 — Safari + iOS support
+- [ ] v0.2 — Auto-save toggle (save silently without banner)
+- [ ] v0.3 — Firefox support
+- [ ] v0.4 — Smart folder organisation
+- [ ] v0.5 — Search across saved bookmarks
+- [ ] v0.6 — Pause/Resume watching toggle
+- [ ] v0.7 — Per-site settings (ignore certain domains)
+- [ ] v0.8 — Safari + iOS support
 - [ ] v1.0 — Chrome Web Store launch
 
 ---
