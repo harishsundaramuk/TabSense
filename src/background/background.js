@@ -326,9 +326,29 @@ chrome.runtime.onInstalled.addListener((details) => {
  * Listens for SAVE_BOOKMARK message from content.js
  * when user clicks "Save it" on the banner.
  */
-chrome.runtime.onMessage.addListener((message, sender) => {
-  console.log("TabSense: Message received —", message.type, sender.tab);
-  if (message.type === "SAVE_BOOKMARK" && sender.tab) {
-    saveBookmark(sender.tab.url, sender.tab.title);
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("TabSense: Message received —", message.type);
+  
+  if (message.type === "SAVE_BOOKMARK") {
+    /**
+     * sender.tab might be undefined in some cases.
+     * So we query the tab by URL stored in message
+     * as a fallback to get the correct tab details.
+     */
+    if (sender.tab && sender.tab.url) {
+      console.log("TabSense: Saving from sender.tab —", sender.tab.url);
+      saveBookmark(sender.tab.url, sender.tab.title);
+    } else {
+      // Fallback — get active tab
+      chrome.tabs.query({ active: true }, (tabs) => {
+        const target = tabs.find(t => t.url && t.url.startsWith("http"));
+        if (target) {
+          console.log("TabSense: Saving from fallback tab —", target.url);
+          saveBookmark(target.url, target.title);
+        }
+      });
+    }
+    sendResponse({ status: "ok" });
   }
+  return true;
 });
