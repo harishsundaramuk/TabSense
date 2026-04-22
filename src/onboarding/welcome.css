@@ -1,0 +1,343 @@
+/*
+  welcome.css — TabSense Onboarding Page
+  
+  Same dark luxury design language as the popup
+  but expanded for a full browser tab experience.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg:           #0e0e10;
+  --bg-card:      #17171a;
+  --bg-elevated:  #1f1f23;
+  --accent:       #E8650A;
+  --accent-dim:   #E8650A20;
+  --accent-glow:  #E8650A15;
+  --text-primary: #f0ece4;
+  --text-secondary:#7a7875;
+  --text-muted:   #3d3c3a;
+  --border:       #2a2a2e;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   AMBIENT BACKGROUND GLOW
+   Creates a subtle warm light source behind content
+   ============================================================ */
+
+.bg-glow {
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    var(--accent-glow) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+
+  /* Staggered fade in on load */
+  animation: fadeUp 0.6s var(--ease) both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-wrap {
+  width: 80px;
+  height: 80px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent)30;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+
+  /* Gentle float animation */
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-6px); }
+}
+
+.logo-img {
+  border-radius: 12px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 400px;
+}
+
+/* ============================================================
+   STEPS
+   ============================================================ */
+
+.steps {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+
+  /*
+    Each step fades in with a different delay
+    using the CSS variable --delay set inline in HTML.
+    This creates a staggered entrance effect.
+  */
+  animation: fadeUp 0.6s var(--ease) both;
+  animation-delay: var(--delay);
+
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.step:hover {
+  border-color: var(--accent)40;
+  background: var(--bg-elevated);
+}
+
+.step-icon {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  background: var(--bg-elevated);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.step-desc em {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+/* ============================================================
+   THRESHOLD SETUP
+   ============================================================ */
+
+.setup {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  text-align: center;
+  animation: fadeUp 0.6s var(--ease) 0.4s both;
+}
+
+.setup-label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.setup-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.threshold-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ctrl-btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.ctrl-btn:active {
+  transform: scale(0.92);
+}
+
+.threshold-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.threshold-num {
+  font-family: var(--font-display);
+  font-size: 48px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.threshold-unit {
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CTA BUTTON
+   ============================================================ */
+
+.cta-btn {
+  appearance: none;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 14px 40px;
+  border-radius: 100px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  animation: fadeUp 0.6s var(--ease) 0.5s both;
+
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 0 0 var(--accent-dim);
+}
+
+.cta-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-dim);
+}
+
+.cta-btn:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   FOOTER NOTE
+   ============================================================ */
+
+.footer-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  animation: fadeUp 0.6s var(--ease) 0.6s both;
+}

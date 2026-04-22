@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to TabSense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="welcome.css" />
+</head>
+<body>
+
+  <!-- Background ambient glow -->
+  <div class="bg-glow"></div>
+
+  <main class="container">
+
+    <!-- Hero section -->
+    <section class="hero">
+      <div class="logo-wrap">
+        <img src="../icons/icon128.png" width="64" height="64" alt="TabSense" class="logo-img" />
+      </div>
+      <h1 class="hero-title">Welcome to <em>TabSense</em></h1>
+      <p class="hero-sub">
+        Your browser now remembers what matters.<br/>
+        No more lost pages. No more forgotten gems.
+      </p>
+    </section>
+
+    <!-- How it works — 3 steps -->
+    <section class="steps">
+
+      <div class="step" style="--delay: 0.1s">
+        <div class="step-icon">👁</div>
+        <div class="step-body">
+          <h3 class="step-title">TabSense watches</h3>
+          <p class="step-desc">
+            It silently tracks how long you spend on each page —
+            no setup needed, works immediately.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" style="--delay: 0.2s">
+        <div class="step-icon">💬</div>
+        <div class="step-body">
+          <h3 class="step-title">TabSense asks</h3>
+          <p class="step-desc">
+            When you cross your time threshold, it gently asks —
+            <em>"Want to save this?"</em> One click. Done.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" style="--delay: 0.3s">
+        <div class="step-icon">🔖</div>
+        <div class="step-body">
+          <h3 class="step-title">TabSense saves</h3>
+          <p class="step-desc">
+            Bookmarked instantly to your browser.
+            Find it anytime from the TabSense popup.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Threshold setter -->
+    <section class="setup">
+      <p class="setup-label">Set your time threshold</p>
+      <p class="setup-hint">How long before TabSense asks to save a page?</p>
+
+      <div class="threshold-row">
+        <button class="ctrl-btn" id="decreaseBtn">−</button>
+        <div class="threshold-display">
+          <span class="threshold-num" id="thresholdNum">5</span>
+          <span class="threshold-unit">minutes</span>
+        </div>
+        <button class="ctrl-btn" id="increaseBtn">+</button>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <button class="cta-btn" id="ctaBtn">
+      Start using TabSense →
+    </button>
+
+    <!-- Footer -->
+    <p class="footer-note">
+      Open source · No data collected · Built for focus
+    </p>
+
+  </main>
+
+  <script src="welcome.js"></script>
+</body>
+</html>

@@ -343,3 +343,24 @@ async function saveBookmark(url, title) {
     console.error("TabSense: Failed to save bookmark —", error.message);
   }
 }
+
+// ============================================================
+// ONBOARDING — open welcome page on first install
+// ============================================================
+
+/**
+ * chrome.runtime.onInstalled
+ * Fires when the extension is installed or updated.
+ * 
+ * CONCEPT: reason
+ * reason === "install"  → brand new installation
+ * reason === "update"   → extension was updated
+ * We only show welcome page on fresh install, not updates.
+ */
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === "install") {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("onboarding/welcome.html")
+    });
+  }
+});
