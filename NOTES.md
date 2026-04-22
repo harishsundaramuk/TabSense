@@ -75,3 +75,21 @@ document.getElementById("name") finds an element by its id=""
 Running async functions one by one:  3 seconds total
 Running them with Promise.all:       1 second total  
 Use it whenever tasks don't depend on each other.
+
+## try/catch — Defensive Programming
+If code can fail (network, storage, permissions) wrap it in try/catch.
+try   { } — the code we want to run
+catch { } — what to do if it fails
+Without this one error silently crashes the whole background script.
+
+## Spread Operator (...)
+const a = [1, 2, 3]
+const b = [...a, 4]  →  [1, 2, 3, 4]
+Creates a new array instead of modifying the original.
+Always prefer this when working with stored data.
+
+## buttonIndex in Notifications
+Chrome passes a number telling us WHICH button was clicked.
+0 = first button ("Yes, bookmark it")
+1 = second button ("No thanks")
+This is zero-indexed — just like arrays in JavaScript.

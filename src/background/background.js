@@ -236,3 +236,110 @@ chrome.tabs.onRemoved.addListener(() => {
 });
 
 console.log("TabSense: Background service worker started");
+
+// ============================================================
+// NOTIFICATION CLICK HANDLER
+// ============================================================
+
+/**
+ * chrome.notifications.onButtonClicked
+ * Fires when the user clicks a button in our notification.
+ * 
+ * CONCEPT: Event Parameters
+ * notificationId — unique ID Chrome gave our notification
+ * buttonIndex    — which button was clicked (0 = first, 1 = second)
+ * 
+ * Our buttons:
+ * 0 = "Yes, bookmark it"
+ * 1 = "No thanks"
+ */
+chrome.notifications.onButtonClicked.addListener(
+  async (notificationId, buttonIndex) => {
+
+    // Only act if user clicked "Yes, bookmark it" (index 0)
+    if (buttonIndex === 0) {
+
+      /**
+       * Get the active tab details so we have the
+       * full URL and title to save.
+       * 
+       * CONCEPT: Array destructuring with await
+       * chrome.tabs.query returns a Promise<Array>
+       * We await it AND destructure in one line.
+       */
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      });
+
+      if (tab) {
+        await saveBookmark(tab.url, tab.title);
+      }
+    }
+
+    // Always close the notification after any button click
+    chrome.notifications.clear(notificationId);
+  }
+);
+
+// ============================================================
+// SAVE BOOKMARK FUNCTION
+// ============================================================
+
+/**
+ * saveBookmark
+ * Saves the page to Chrome bookmarks AND stores it in
+ * our own list in chrome.storage for the popup to display.
+ * 
+ * CONCEPT: Two places to save
+ * 1. chrome.bookmarks.create — saves to the actual browser
+ *    bookmarks so the user sees it in their bookmark bar
+ * 2. chrome.storage.sync — saves to OUR list so the popup
+ *    can show "Recently Saved" without reading all bookmarks
+ * 
+ * @param {string} url   - The page URL to bookmark
+ * @param {string} title - The page title to use as bookmark name
+ * @returns {void}
+ */
+async function saveBookmark(url, title) {
+
+  try {
+    /**
+     * CONCEPT: try/catch
+     * Code that might fail goes inside try { }
+     * If it fails, catch(error) handles it gracefully
+     * Without this, one error crashes the whole script
+     */
+
+    // Save to Chrome's actual bookmarks
+    await chrome.bookmarks.create({ title, url });
+
+    // Save to our own list in chrome.storage
+    // First read the existing list
+    const data = await chrome.storage.sync.get("savedBookmarks");
+
+    /**
+     * CONCEPT: Spread operator (...)
+     * [...existing, newItem] creates a NEW array with
+     * all existing items PLUS the new one at the end.
+     * We never mutate the original array directly.
+     * This is considered best practice in modern JS.
+     */
+    const existing = data.savedBookmarks || [];
+    const updated = [...existing, { title, url, savedAt: Date.now() }];
+
+    // Save the updated list back to storage
+    await chrome.storage.sync.set({ savedBookmarks: updated });
+
+    console.log(`TabSense: Bookmarked — ${title}`);
+
+  } catch (error) {
+    /**
+     * CONCEPT: Error handling
+     * We log the error so we can debug it in DevTools
+     * but we don't crash the extension.
+     * error.message gives us the human readable description.
+     */
+    console.error("TabSense: Failed to save bookmark —", error.message);
+  }
+}
