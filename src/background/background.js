@@ -232,50 +232,7 @@ chrome.tabs.onRemoved.addListener(() => {
 
 console.log("TabSense: Background service worker started");
 
-// ============================================================
-// NOTIFICATION CLICK HANDLER
-// ============================================================
 
-/**
- * chrome.notifications.onButtonClicked
- * Fires when the user clicks a button in our notification.
- * 
- * CONCEPT: Event Parameters
- * notificationId — unique ID Chrome gave our notification
- * buttonIndex    — which button was clicked (0 = first, 1 = second)
- * 
- * Our buttons:
- * 0 = "Yes, bookmark it"
- * 1 = "No thanks"
- */
-chrome.notifications.onButtonClicked.addListener(
-  async (notificationId, buttonIndex) => {
-
-    // Only act if user clicked "Yes, bookmark it" (index 0)
-    if (buttonIndex === 0) {
-
-      /**
-       * Get the active tab details so we have the
-       * full URL and title to save.
-       * 
-       * CONCEPT: Array destructuring with await
-       * chrome.tabs.query returns a Promise<Array>
-       * We await it AND destructure in one line.
-       */
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      });
-
-      if (tab) {
-        await saveBookmark(tab.url, tab.title);
-      }
-    }
-
-    // Always close the notification after any button click
-    chrome.notifications.clear(notificationId);
-  }
-);
 
 
 /**
