@@ -282,59 +282,63 @@ chrome.notifications.onButtonClicked.addListener(
 // ============================================================
 
 /**
- * saveBookmark
- * Saves the page to Chrome bookmarks AND stores it in
- * our own list in chrome.storage for the popup to display.
+ * getOrCreateTabSenseFolder
+ * Finds the TabSense bookmarks folder or creates it if
+ * it doesn't exist yet.
  * 
- * CONCEPT: Two places to save
- * 1. chrome.bookmarks.create — saves to the actual browser
- *    bookmarks so the user sees it in their bookmark bar
- * 2. chrome.storage.sync — saves to OUR list so the popup
- *    can show "Recently Saved" without reading all bookmarks
+ * CONCEPT: Idempotent operations
+ * No matter how many times this runs, it only ever creates
+ * ONE folder. We search first, create only if not found.
+ * This is called an idempotent operation — safe to call repeatedly.
+ * 
+ * @returns {string} - The folder ID to save bookmarks into
+ */
+async function getOrCreateTabSenseFolder() {
+  // Search for existing TabSense folder
+  const results = await chrome.bookmarks.search({ title: "TabSense" });
+
+  // If folder already exists, return its ID
+  const existing = results.find(b => b.url === undefined);
+  if (existing) return existing.id;
+
+  // Otherwise create it fresh
+  const folder = await chrome.bookmarks.create({ title: "TabSense" });
+  return folder.id;
+}
+
+/**
+ * saveBookmark
+ * Saves the page into the TabSense bookmarks folder
+ * AND into our own storage list for the popup.
  * 
  * @param {string} url   - The page URL to bookmark
- * @param {string} title - The page title to use as bookmark name
- * @returns {void}
+ * @param {string} title - The page title
  */
 async function saveBookmark(url, title) {
-
   try {
-    /**
-     * CONCEPT: try/catch
-     * Code that might fail goes inside try { }
-     * If it fails, catch(error) handles it gracefully
-     * Without this, one error crashes the whole script
-     */
+    // Get or create the TabSense folder
+    const folderId = await getOrCreateTabSenseFolder();
 
-    // Save to Chrome's actual bookmarks
-    await chrome.bookmarks.create({ title, url });
+    // Save into the TabSense folder
+    await chrome.bookmarks.create({ 
+      parentId: folderId,
+      title, 
+      url 
+    });
 
-    // Save to our own list in chrome.storage
-    // First read the existing list
+    // Save to our own list for the popup
     const data = await chrome.storage.sync.get("savedBookmarks");
-
-    /**
-     * CONCEPT: Spread operator (...)
-     * [...existing, newItem] creates a NEW array with
-     * all existing items PLUS the new one at the end.
-     * We never mutate the original array directly.
-     * This is considered best practice in modern JS.
-     */
     const existing = data.savedBookmarks || [];
-    const updated = [...existing, { title, url, savedAt: Date.now() }];
-
-    // Save the updated list back to storage
+    const updated = [...existing, { 
+      title, 
+      url, 
+      savedAt: Date.now() 
+    }];
     await chrome.storage.sync.set({ savedBookmarks: updated });
 
-    console.log(`TabSense: Bookmarked — ${title}`);
+    console.log(`TabSense: Bookmarked into TabSense folder — ${title}`);
 
   } catch (error) {
-    /**
-     * CONCEPT: Error handling
-     * We log the error so we can debug it in DevTools
-     * but we don't crash the extension.
-     * error.message gives us the human readable description.
-     */
     console.error("TabSense: Failed to save bookmark —", error.message);
   }
 }
