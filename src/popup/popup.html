@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TabSense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!--
+    CONCEPT: HTML Structure
+    We divide the popup into logical sections.
+    Each section has a clear job.
+    This makes CSS and JS easier to target specific parts.
+  -->
+
+  <!-- Top bar with logo and status indicator -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">TabSense</span>
+    </div>
+    <div class="status-pill" id="statusPill">
+      <span class="status-dot"></span>
+      <span class="status-label">Watching</span>
+    </div>
+  </header>
+
+  <!-- Current page being tracked -->
+  <section class="current-page">
+    <p class="section-label">Current Page</p>
+    <p class="page-title" id="pageTitle">Loading...</p>
+    <div class="timer-bar-wrap">
+      <div class="timer-bar" id="timerBar"></div>
+    </div>
+    <p class="timer-text" id="timerText">0 min spent</p>
+  </section>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Threshold setting -->
+  <section class="settings-section">
+    <p class="section-label">Prompt me after</p>
+    <div class="threshold-controls">
+      <button class="ctrl-btn" id="decreaseBtn">−</button>
+      <span class="threshold-value" id="thresholdValue">5 min</span>
+      <button class="ctrl-btn" id="increaseBtn">+</button>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Recent bookmarks saved by TabSense -->
+  <section class="recents-section">
+    <p class="section-label">Recently Saved</p>
+    <ul class="recents-list" id="recentsList">
+      <li class="empty-state">No bookmarks saved yet</li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>TabSense v0.1</span>
+    <span class="footer-dot">·</span>
+    <span>Open Source</span>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

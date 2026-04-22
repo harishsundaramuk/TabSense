@@ -1,0 +1,356 @@
+/*
+  popup.css — TabSense Popup Styles
+  
+  CONCEPT: CSS Custom Properties (Variables)
+  We define all colours and values at the top using --variable-name.
+  This means if we want to change the accent colour, we change it
+  in ONE place and it updates everywhere automatically.
+  Think of it like constants in JavaScript.
+  
+  CONCEPT: :root
+  :root is the highest level element in CSS (the <html> tag).
+  Variables defined here are available EVERYWHERE in the stylesheet.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  /* Colour palette — dark luxury */
+  --bg-primary:     #0e0e10;
+  --bg-secondary:   #17171a;
+  --bg-elevated:    #1f1f23;
+  --accent:         #c9a84c;
+  --accent-dim:     #c9a84c30;
+  --text-primary:   #f0ece4;
+  --text-secondary: #7a7875;
+  --text-muted:     #3d3c3a;
+  --border:         #2a2a2e;
+  --success:        #4caf7d;
+
+  /* Typography */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Spacing */
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 18px;
+  --space-lg: 24px;
+
+  /* Animation */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   Remove browser default styles so we have full control
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /*
+    Chrome extension popups have a fixed width.
+    320px is the sweet spot — wide enough for content,
+    narrow enough to feel like a focused tool.
+  */
+  width: 320px;
+  min-height: 420px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: var(--space-md);
+
+  /*
+    Animation: Fade in the whole popup when it opens.
+    This makes it feel polished instead of just appearing.
+    
+    CONCEPT: CSS Animations
+    @keyframes defines WHAT changes.
+    animation property says HOW and WHEN to play it.
+  */
+  animation: fadeIn 0.25s var(--ease) both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.logo-icon {
+  font-size: 18px;
+  color: var(--accent);
+
+  /*
+    Subtle rotation animation on the icon.
+    animation-iteration-count: infinite means it loops forever.
+    animation-timing-function: linear means constant speed.
+  */
+  animation: gentleSpin 12s linear infinite;
+}
+
+@keyframes gentleSpin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Status pill — shows "Watching" or "Paused" */
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+
+  /*
+    Pulse animation — the green dot gently pulses
+    to show the extension is actively watching.
+    
+    CONCEPT: box-shadow animation
+    We animate between two different box-shadow values
+    to create a glowing pulsing effect.
+  */
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 125, 0.5); }
+  50%       { box-shadow: 0 0 0 4px rgba(76, 175, 125, 0);  }
+}
+
+/* ============================================================
+   CURRENT PAGE SECTION
+   ============================================================ */
+
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.page-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+
+  /*
+    Truncate long page titles with ellipsis ...
+    instead of wrapping to multiple lines.
+    Requires all three properties to work.
+  */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Progress bar showing time spent vs threshold */
+.timer-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: var(--space-xs);
+}
+
+.timer-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #e8c87a);
+  border-radius: 100px;
+
+  /*
+    Smooth transition when the bar width changes.
+    transition: property duration easing
+    
+    CONCEPT: CSS Transitions vs Animations
+    Animations play automatically.
+    Transitions play when a CSS VALUE CHANGES.
+    JS will update the width, CSS will smoothly animate it.
+  */
+  transition: width 1s var(--ease);
+}
+
+.timer-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-md) 0;
+}
+
+/* ============================================================
+   SETTINGS SECTION
+   ============================================================ */
+
+.settings-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.threshold-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ctrl-btn {
+  /*
+    All button defaults removed.
+    We style from scratch for full control.
+  */
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /*
+    Smooth hover transition.
+    We change border and background on hover (below).
+  */
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.ctrl-btn:active {
+  /* Micro-interaction: tiny press down effect */
+  transform: scale(0.93);
+}
+
+.threshold-value {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--accent);
+  min-width: 52px;
+  text-align: center;
+}
+
+/* ============================================================
+   RECENTS SECTION
+   ============================================================ */
+
+.recents-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recents-list li {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.recents-list li:hover {
+  border-color: var(--accent-dim);
+  background: var(--bg-elevated);
+}
+
+.empty-state {
+  color: var(--text-muted) !important;
+  font-style: italic;
+  cursor: default !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.footer {
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.footer-dot {
+  color: var(--accent);
+}
