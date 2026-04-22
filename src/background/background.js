@@ -277,9 +277,6 @@ chrome.notifications.onButtonClicked.addListener(
   }
 );
 
-// ============================================================
-// SAVE BOOKMARK FUNCTION
-// ============================================================
 
 /**
  * getOrCreateTabSenseFolder
@@ -361,5 +358,20 @@ chrome.runtime.onInstalled.addListener((details) => {
     chrome.tabs.create({
       url: chrome.runtime.getURL("onboarding/welcome.html")
     });
+  }
+});
+
+// ============================================================
+// MESSAGE LISTENER — from content script
+// ============================================================
+
+/**
+ * Listens for SAVE_BOOKMARK message from content.js
+ * when user clicks "Save it" on the banner.
+ */
+chrome.runtime.onMessage.addListener((message, sender) => {
+  console.log("TabSense: Message received —", message.type, sender.tab);
+  if (message.type === "SAVE_BOOKMARK" && sender.tab) {
+    saveBookmark(sender.tab.url, sender.tab.title);
   }
 });
