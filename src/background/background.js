@@ -31,7 +31,7 @@
  * Naming it in UPPER_CASE is a convention that tells other
  * developers "this is a configuration value, not a variable"
  */
-const TIME_THRESHOLD_MINUTES = 5;
+const TIME_THRESHOLD_MINUTES = 1;
 
 /**
  * activeTabTimer
@@ -130,31 +130,26 @@ function startTimer(url, title) {
   console.log(`TabSense: Timer started for ${url} (${TIME_THRESHOLD_MINUTES} mins)`);
 }
 
-/**
- * promptUser
- * Shows a notification asking the user to bookmark the page.
- * 
- * CONCEPT: chrome.notifications API
- * This is a Chrome-specific API that shows a native OS
- * notification - the same kind you see from other apps.
- * It only works in extensions, not normal webpages.
- * 
- * @param {string} url - The page URL to potentially bookmark
- * @param {string} title - The page title to show in notification
- * @returns {void}
- */
 function promptUser(url, title) {
-  chrome.notifications.create({
-    type: "basic",
-    // We will add a real icon later
-    iconUrl: "../icons/icon48.png",
-    title: "Save this page?",
-    message: `You've been on "${title}" for ${TIME_THRESHOLD_MINUTES} minutes. Want to bookmark it?`,
-    buttons: [
-      { title: "Yes, bookmark it" },
-      { title: "No thanks" }
-    ],
-    requireInteraction: true
+  /**
+   * Instead of querying the ACTIVE tab, we find the tab
+   * by its URL — this way it works even if the user has
+   * switched to a different tab while the timer was running.
+   */
+  chrome.tabs.query({}, (tabs) => {
+    const targetTab = tabs.find(t => t.url === url);
+    if (targetTab) {
+      chrome.tabs.sendMessage(targetTab.id, {
+        type: "SHOW_BANNER",
+        title: title,
+        minutes: TIME_THRESHOLD_MINUTES
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.log("TabSense: Could not send message —", 
+            chrome.runtime.lastError.message);
+        }
+      });
+    }
   });
 
   console.log(`TabSense: Prompted user for ${url}`);
