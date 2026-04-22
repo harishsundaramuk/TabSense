@@ -63,7 +63,7 @@ async function loadThreshold() {
    * undefined || 5 evaluates to 5
    * 3 || 5 evaluates to 3 (because 3 is truthy)
    */
-  const threshold = data.threshold || 5;
+  const threshold = data.threshold || 3;
   thresholdVal.textContent = `${threshold} min`;
   return threshold;
 }

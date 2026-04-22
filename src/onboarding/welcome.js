@@ -17,7 +17,7 @@ const thresholdNum   = document.getElementById("thresholdNum");
 const ctaBtn         = document.getElementById("ctaBtn");
 
 // Start at 5 minutes default
-let threshold = 5;
+let threshold = 3;
 
 /**
  * updateDisplay

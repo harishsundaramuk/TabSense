@@ -31,7 +31,7 @@
  * Naming it in UPPER_CASE is a convention that tells other
  * developers "this is a configuration value, not a variable"
  */
-const TIME_THRESHOLD_MINUTES = 1;
+const TIME_THRESHOLD_MINUTES = 3;
 
 /**
  * activeTabTimer
